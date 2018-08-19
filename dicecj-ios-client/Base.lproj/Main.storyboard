@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,51 +19,84 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Enter name..." borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="17x-Wh-nPF">
-                                <rect key="frame" x="134" y="453" width="107" height="30"/>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" text="Enter name..." borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="17x-Wh-nPF">
+                                <rect key="frame" x="37.5" y="490" width="300" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="5Rv-34-1g6"/>
+                                    <constraint firstAttribute="width" constant="300" id="huu-X1-KJu"/>
+                                </constraints>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="start game to see dice" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="rmf-ya-jY8">
-                                <rect key="frame" x="16" y="410" width="343" height="33"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="start game to see dice" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rmf-ya-jY8">
+                                <rect key="frame" x="37.5" y="340" width="300" height="130"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="343" id="fLD-bz-6j0"/>
-                                    <constraint firstAttribute="height" constant="33" id="wbS-tR-tIq"/>
+                                    <constraint firstAttribute="width" constant="300" id="YFd-n4-OGB"/>
+                                    <constraint firstAttribute="height" constant="130" id="fBl-i9-Qu9"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Enter name to start/continue game..." textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="ZUG-jv-Lb7">
-                                <rect key="frame" x="16" y="30" width="343" height="370"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Enter name to start/continue game..." textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZUG-jv-Lb7">
+                                <rect key="frame" x="37.5" y="30" width="300" height="300"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="370" id="ZqB-8m-80f"/>
-                                    <constraint firstAttribute="width" constant="343" id="zJQ-sL-Uzm"/>
+                                    <constraint firstAttribute="height" constant="300" id="Pfc-QT-IzN"/>
+                                    <constraint firstAttribute="width" constant="300" id="tb6-Xn-i6c"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fVg-e6-MXc">
-                                <rect key="frame" x="37" y="617" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hk0-q6-wUr">
+                                <rect key="frame" x="59" y="590" width="301" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="a5d-n3-YQK"/>
+                                    <constraint firstAttribute="width" constant="300" id="faN-az-bAK"/>
+                                </constraints>
+                                <state key="normal" title="new game"/>
                                 <connections>
-                                    <action selector="sendCommand:" destination="BYZ-38-t0r" eventType="touchUpInside" id="uPB-eA-c7X"/>
+                                    <action selector="startGame:" destination="BYZ-38-t0r" eventType="touchUpInside" id="lWg-L0-cw8"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NiN-Th-2mi">
+                                <rect key="frame" x="59" y="540" width="300" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="SkB-pz-E5v"/>
+                                    <constraint firstAttribute="width" constant="300" id="fyR-BJ-3zr"/>
+                                </constraints>
+                                <state key="normal" title="action!"/>
+                                <connections>
+                                    <action selector="sendCommand:" destination="BYZ-38-t0r" eventType="touchUpInside" id="WPs-43-K6i"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fVg-e6-MXc">
+                                <rect key="frame" x="85" y="640" width="206" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="7Rw-6f-8x0"/>
+                                    <constraint firstAttribute="height" constant="30" id="SEl-fj-0qD"/>
+                                </constraints>
+                                <state key="normal" title="hello"/>
+                                <connections>
+                                    <action selector="sayHello:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Oi2-Mq-Yn0"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="17x-Wh-nPF" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="9hN-We-44f"/>
+                            <constraint firstItem="rmf-ya-jY8" firstAttribute="centerX" secondItem="ZUG-jv-Lb7" secondAttribute="centerX" id="682-lH-wgE"/>
                             <constraint firstItem="ZUG-jv-Lb7" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="Dyq-Tx-vlg"/>
                             <constraint firstItem="rmf-ya-jY8" firstAttribute="top" secondItem="ZUG-jv-Lb7" secondAttribute="bottom" constant="10" id="GGx-bL-W9y"/>
-                            <constraint firstItem="17x-Wh-nPF" firstAttribute="top" secondItem="rmf-ya-jY8" secondAttribute="bottom" constant="10" id="UcL-c6-Ug6"/>
-                            <constraint firstItem="rmf-ya-jY8" firstAttribute="top" secondItem="ZUG-jv-Lb7" secondAttribute="bottom" constant="10" id="fWj-hE-Zp7"/>
+                            <constraint firstItem="NiN-Th-2mi" firstAttribute="top" secondItem="17x-Wh-nPF" secondAttribute="bottom" constant="20" id="H9D-m9-a2g"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="fVg-e6-MXc" secondAttribute="bottom" constant="10" id="NXe-9K-S5c"/>
+                            <constraint firstAttribute="bottom" secondItem="fVg-e6-MXc" secondAttribute="bottom" constant="10" id="fgS-go-Xpd"/>
                             <constraint firstItem="ZUG-jv-Lb7" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="igA-3v-qAW"/>
-                            <constraint firstItem="17x-Wh-nPF" firstAttribute="top" secondItem="rmf-ya-jY8" secondAttribute="bottom" constant="10" id="oL2-6a-9Nw"/>
-                            <constraint firstItem="rmf-ya-jY8" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="vST-Qz-XbC"/>
+                            <constraint firstItem="17x-Wh-nPF" firstAttribute="top" secondItem="rmf-ya-jY8" secondAttribute="bottom" constant="20" id="n0v-qi-h11"/>
+                            <constraint firstItem="17x-Wh-nPF" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="ntR-7a-fA9"/>
+                            <constraint firstItem="fVg-e6-MXc" firstAttribute="top" secondItem="hk0-q6-wUr" secondAttribute="bottom" constant="20" id="q9H-8V-IoK"/>
+                            <constraint firstItem="rmf-ya-jY8" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="vHN-Ov-YxI"/>
+                            <constraint firstItem="hk0-q6-wUr" firstAttribute="top" secondItem="NiN-Th-2mi" secondAttribute="bottom" constant="20" id="vyl-LW-Qgi"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -74,7 +108,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4" y="46.326836581709152"/>
+            <point key="canvasLocation" x="2.3999999999999999" y="45.42728635682159"/>
         </scene>
     </scenes>
 </document>

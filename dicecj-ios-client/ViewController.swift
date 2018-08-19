@@ -13,19 +13,51 @@ class ViewController: UIViewController {
     @IBOutlet weak var outputResult: UITextView!
     @IBOutlet weak var outputDice: UITextView!
     @IBOutlet weak var userInput: UITextField!
+    let mainURL = "http://localhost:8080/dicecj/resources/"
+    var gameID : Int?
     
-
     @IBAction func sendCommand(_ sender: Any) {
-        let url = URL(string: "http://localhost:8080/dicecj/resources/hello")
-        
-        var request = URLRequest(url: url!)
-        request.httpMethod = "POST"
-        
-        guard let requestData = userInput.text else {
+        guard let inputData = userInput.text else {
             print("invalid user input")
             return
         }
-        request.httpBody = requestData.data(using: String.Encoding.utf8)
+        let url = URL(string: mainURL + "command")
+        let requestData : String = "{\"gameId\": \(gameID!),\"userInput\": \"\(inputData)\"}"
+        requestResource(resource: url!, requestData: requestData) { response in
+            self.processDiceCJResponse(response)
+        }
+    }
+    
+    @IBAction func startGame(_ sender: Any) {
+        guard let inputData = userInput.text else {
+            print("invalid user input")
+            return
+        }
+        let url = URL(string: mainURL + "command/newgame")
+        requestResource(resource: url!, requestData: inputData) { response in
+            self.processDiceCJResponse(response)
+        }
+    }
+    
+    @IBAction func sayHello(_ sender: Any) {
+        guard let inputData = userInput.text else {
+            print("invalid user input")
+            return
+        }
+        let url = URL(string: mainURL + "hello")
+        requestResource(resource: url!, requestData: inputData) { response in
+            DispatchQueue.main.async() {
+            let responseString = NSString(data: response, encoding: String.Encoding.utf8.rawValue)
+            self.outputResult.text = responseString!.substring(from: 0)
+            }
+        }
+    }
+    
+    func requestResource(resource: URL, requestData: String?, callback: @escaping (Data) -> Void) {
+        var request = URLRequest(url: resource)
+        request.httpMethod = "POST"
+        
+        request.httpBody = requestData!.data(using: String.Encoding.utf8)
         
         let session = URLSession.shared
         session.dataTask(with: request) { data, URLResponse, error in
@@ -33,13 +65,20 @@ class ViewController: UIViewController {
                 print("no data received")
                 return
             }
-            let response = NSString(data: data, encoding: String.Encoding.utf8.rawValue)
-            
-            DispatchQueue.main.async() {
-                self.outputResult.text = response!.substring(from: 0)
-            }
-        }.resume()
-
+            callback(data)
+            }.resume()
+    }
+    
+    func processDiceCJResponse(_ response: (Data)) {
+        DispatchQueue.main.async {
+            let jsonObject = try? JSONSerialization.jsonObject(with: response, options: [])
+            let jsonResponse = jsonObject as? [String: Any]
+            print(jsonResponse as Any)
+            self.gameID = jsonResponse!["gameId"] as! Int
+            self.outputResult.text = jsonResponse!["scoreboard"] as! String
+            self.outputDice.text = jsonResponse!["result"] as! String
+            self.userInput.text = ""
+        }
     }
 
     override func viewDidLoad() {
