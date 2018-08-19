@@ -52,12 +52,5 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-
-}
-
-extension URLRequest {
-    static func allowsAnyHTTPSCertificateForHost(host: String) -> Bool {
-        return true
-    }
 }
 
