@@ -10,6 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    @IBOutlet weak var commandButtonView: UIView!
     @IBOutlet weak var outputResult: UITextView!
     @IBOutlet weak var outputDice: UITextView!
     @IBOutlet weak var userInput: UITextField!
@@ -84,6 +85,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        let button = UIButton()
+        button.setTitle("TEST", for: UIControlState.normal)
+        button.frame = CGRect(x: 60, y: 60, width: 50, height: 30);
+        commandButtonView.addSubview(button)
     }
 
     override func didReceiveMemoryWarning() {
