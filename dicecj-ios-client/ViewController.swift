@@ -16,6 +16,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var userInput: UITextField!
     let mainURL = "http://localhost:8080/dicecj/resources/"
     var gameID : Int?
+    let HTTPPOST = "POST"
+    let HTTPGET = "GET"
     
     @IBAction func sendCommand(_ sender: Any) {
         guard let inputData = userInput.text else {
@@ -24,7 +26,7 @@ class ViewController: UIViewController {
         }
         let url = URL(string: mainURL + "command")
         let requestData : String = "{\"gameId\": \(gameID!),\"userInput\": \"\(inputData)\"}"
-        requestResource(resource: url!, requestData: requestData) { response in
+        requestResource(resource: url!, requestMethod: HTTPPOST, requestData: requestData) { response in
             self.processDiceCJResponse(response)
         }
     }
@@ -35,7 +37,7 @@ class ViewController: UIViewController {
             return
         }
         let url = URL(string: mainURL + "command/newgame")
-        requestResource(resource: url!, requestData: inputData) { response in
+        requestResource(resource: url!, requestMethod: HTTPPOST, requestData: inputData) { response in
             self.processDiceCJResponse(response)
         }
     }
@@ -46,7 +48,7 @@ class ViewController: UIViewController {
             return
         }
         let url = URL(string: mainURL + "hello")
-        requestResource(resource: url!, requestData: inputData) { response in
+        requestResource(resource: url!, requestMethod: HTTPPOST, requestData: inputData) { response in
             DispatchQueue.main.async() {
             let responseString = NSString(data: response, encoding: String.Encoding.utf8.rawValue)
             self.outputResult.text = responseString!.substring(from: 0)
@@ -54,11 +56,13 @@ class ViewController: UIViewController {
         }
     }
     
-    func requestResource(resource: URL, requestData: String?, callback: @escaping (Data) -> Void) {
+    func requestResource(resource: URL, requestMethod: String, requestData: String?, callback: @escaping (Data) -> Void) {
         var request = URLRequest(url: resource)
-        request.httpMethod = "POST"
+        request.httpMethod = requestMethod
         
-        request.httpBody = requestData!.data(using: String.Encoding.utf8)
+        if let requestData = requestData {
+            request.httpBody = requestData.data(using: String.Encoding.utf8)
+        }
         
         let session = URLSession.shared
         session.dataTask(with: request) { data, URLResponse, error in
@@ -75,7 +79,7 @@ class ViewController: UIViewController {
             let jsonObject = try? JSONSerialization.jsonObject(with: response, options: [])
             let jsonResponse = jsonObject as? [String: Any]
             print(jsonResponse as Any)
-            self.gameID = jsonResponse!["gameId"] as! Int
+            self.gameID = jsonResponse!["gameId"] as? Int
             self.outputResult.text = jsonResponse!["scoreboard"] as! String
             self.outputDice.text = jsonResponse!["result"] as! String
             self.userInput.text = ""
@@ -84,7 +88,14 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        let resourceURL = URL(string: mainURL + "command/overview")
+        requestResource(resource: resourceURL!, requestMethod: HTTPGET, requestData: nil) { response in
+            DispatchQueue.main.async() {
+                let responseString = NSString(data: response, encoding: String.Encoding.utf8.rawValue)
+                self.outputResult.text = responseString!.substring(from: 0)
+            }
+        }
+
         let button = UIButton()
         button.setTitle("TEST", for: UIControlState.normal)
         button.frame = CGRect(x: 60, y: 60, width: 50, height: 30);
