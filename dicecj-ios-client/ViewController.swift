@@ -19,48 +19,10 @@ class ViewController: UIViewController {
     let HTTPPOST = "POST"
     let HTTPGET = "GET"
     
-    @IBAction func sendCommand(_ sender: Any) {
-        guard let inputData = userInput.text else {
-            print("invalid user input")
-            return
-        }
-        let url = URL(string: mainURL + "command")
-        let requestData : String = "{\"gameId\": \(gameID),\"userInput\": \"\(inputData)\"}"
-        requestResource(resource: url!, requestMethod: HTTPPOST, requestData: requestData) { response in
-            self.processDiceCJResponse(response)
-        }
-    }
-    
-    @IBAction func startGame(_ sender: Any) {
-        guard let inputData = userInput.text else {
-            print("invalid user input")
-            return
-        }
-        let url = URL(string: mainURL + "command/newgame")
-        requestResource(resource: url!, requestMethod: HTTPPOST, requestData: inputData) { response in
-            self.processDiceCJResponse(response)
-        }
-    }
-    
-    @IBAction func sayHello(_ sender: Any) {
-        guard let inputData = userInput.text else {
-            print("invalid user input")
-            return
-        }
-        let url = URL(string: mainURL + "hello")
-        requestResource(resource: url!, requestMethod: HTTPPOST, requestData: inputData) { response in
-            DispatchQueue.main.async() {
-            let responseString = NSString(data: response, encoding: String.Encoding.utf8.rawValue)
-            self.outputResult.text = responseString!.substring(from: 0)
-            }
-        }
-    }
-    
-    @IBAction func test(sender: UIButton) {
-        print("heeeeellooo")
+    @IBAction func sendCommand(sender: UIButton) {
         let trigger = sender.currentTitle!
         guard let inputData = userInput.text else {
-            print("invalid user input")
+            print("sendCommand: invalid user input")
             return
         }
         let url = URL(string: mainURL + "command")
@@ -81,7 +43,7 @@ class ViewController: UIViewController {
         let session = URLSession.shared
         session.dataTask(with: request) { data, URLResponse, error in
             guard let data = data else {
-                print("no data received")
+                print("requestResource: no data received")
                 return
             }
             callback(data)
@@ -92,21 +54,43 @@ class ViewController: UIViewController {
         DispatchQueue.main.async {
             let jsonObject = try? JSONSerialization.jsonObject(with: response, options: [])
             let jsonResponse = jsonObject as? [String: Any]
-            print(jsonResponse as Any)
             self.gameID = jsonResponse!["gameId"] as! Int
             self.outputResult.text = jsonResponse!["scoreboard"] as! String
             self.outputDice.text = jsonResponse!["result"] as! String
             self.userInput.text = ""
         }
     }
+    
+    fileprivate func addCommandButtons(commands: [String: Any]?) -> String {
+        guard let commands = commands else {
+            return "no commands received"
+        }
+        var x = 10
+        var commandOutput = ""
+        for (command, trigger) in commands {
+            commandOutput += command + "\n"
+            self.addButton(label:trigger as! String, x: x, y: 20)
+            x += 70
+        }
+        return commandOutput
+    }
 
     fileprivate func addButton(label: String, x: Int, y: Int) {
         let button = UIButton()
         button.setTitle(label, for: UIControlState.normal)
         button.frame = CGRect(x: x, y: y, width: 60, height: 40);
-        button.addTarget(self, action: #selector(test), for: .touchDown)
+        button.addTarget(self, action: #selector(sendCommand), for: .touchDown)
         button.backgroundColor = UIColor.black
         commandButtonView.addSubview(button)
+    }
+    
+    fileprivate func initFields(_ initialResponse: Data) {
+        let jsonObject = try? JSONSerialization.jsonObject(with: initialResponse, options: [])
+        let jsonResponse = jsonObject as? [String: Any]
+        let availableCommands = jsonResponse!["availableCommands"] as? [String: Any]
+        self.outputResult.text = self.addCommandButtons(commands: availableCommands)
+        self.outputDice.text = jsonResponse!["hello"] as! String
+        self.userInput.text = "enter data and press button..."
     }
     
     override func viewDidLoad() {
@@ -114,22 +98,7 @@ class ViewController: UIViewController {
         let resourceURL = URL(string: mainURL + "command/overview")
         requestResource(resource: resourceURL!, requestMethod: HTTPGET, requestData: nil) { response in
             DispatchQueue.main.async() {
-                let jsonObject = try? JSONSerialization.jsonObject(with: response, options: [])
-                let jsonResponse = jsonObject as? [String: Any]
-                let availableCommands = jsonResponse!["availableCommands"] as? [String: Any]
-                print(jsonResponse as Any)
-                print(availableCommands as Any)
-                var x = 10
-                var commandOutput = ""
-                for (command, trigger) in availableCommands! {
-                    commandOutput += command + "\n"
-                    self.addButton(label:trigger as! String, x: x, y: 20)
-                    x += 70
-                    print("command:\(command), trigger:\(trigger)")
-                }
-                self.outputResult.text = commandOutput
-                self.outputDice.text = jsonResponse!["hello"] as! String
-                self.userInput.text = ""
+                self.initFields(response)
             }
         }
     }
